@@ -966,6 +966,7 @@ fn resolve_repl_model(cli_model: String) -> String {
     }
     if let Some(env_model) = env::var("ANTHROPIC_MODEL")
         .ok()
+        .or_else(|| api::dotenv_value("ANTHROPIC_MODEL"))
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
     {

@@ -336,7 +336,13 @@ fn credentials_home_dir() -> io::Result<PathBuf> {
     }
     let home = std::env::var_os("HOME")
         .or_else(|| std::env::var_os("USERPROFILE"))
-        .ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "HOME is not set"))?;
+        .ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::NotFound,
+                "HOME is not set (on Windows, set USERPROFILE or HOME, \
+                 or use CLAW_CONFIG_HOME to point directly at the config directory)",
+            )
+        })?;
     Ok(PathBuf::from(home).join(".claw"))
 }
 
